@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mex.pdd.modules.admin.sys.dao.SysUserDao">
+    <resultMap id="BaseResultMap" type="com.mex.pdd.modules.admin.sys.entity.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="email" property="email"/>
+        <result column="mobile" property="mobile"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <!-- 通用查询映射结果 -->
+    <select id="queryListByWrapper" resultType="SysUser">
+        select u.*,r.role_name as roleName from sys_user u
+        left join sys_user_role role on role.user_id = u.user_id
+        left join sys_role r on role.role_id = r.role_id
+        ${ew.sqlSegment}
+    </select>
+
+
+    <select id="queryPageByWrapper" resultType="SysUser">
+        select u.*,r.role_name as roleName from sys_user u
+        left join sys_user_role role on role.user_id = u.user_id
+        left join sys_role r on role.role_id = r.role_id
+        ${ew.sqlSegment}
+    </select>
+
+    <select id="queryPageList" resultType="SysUser">
+        select u.* from sys_user u
+        <where>
+            <if test="username != null and username.trim() != ''">
+                and u.`username` like concat('%',#{username},'%')
+            </if>
+            <!--  数据过滤  -->
+            ${filterSql}
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by u.${sidx} ${order}
+            </when>
+            <otherwise>
+                order by u.user_id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryList" resultType="SysUser">
+        select u.* from sys_user u
+        <where>
+            <if test="username != null and username.trim() != ''">
+                and u.`username` like concat('%',#{username},'%')
+            </if>
+            <!--  数据过滤  -->
+            ${filterSql}
+        </where>
+    </select>
+
+    <!-- 查询用户的所有权限 -->
+    <select id="queryAllPerms" resultType="string">
+		select m.perms from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId}
+	</select>
+
+    <!-- 查询用户的所有菜单ID -->
+    <select id="queryAllMenuId" resultType="long">
+		select distinct rm.menu_id from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+		where ur.user_id = #{userId}
+	</select>
+
+    <select id="queryByUserName" resultType="SysUser">
+		select * from sys_user where username = #{username}
+	</select>
+
+
+    <delete id="deleteBatch">
+        delete from sys_user where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        ;
+        delete from sys_user_role where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+
+</mapper>

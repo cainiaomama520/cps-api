@@ -1,0 +1,10 @@
+FROM maven:3.5.0-jdk-8-alpine
+ENV TZ=Asia/Shanghai LANG="C.UTF-8"
+RUN \
+    rm /etc/localtime && \
+    ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# add pom.xml and source code
+ADD ./pom.xml pom.xml
+ADD ./src src/
+# package jar
+RUN mvn -P test clean package -Dmaven.test.skip=true

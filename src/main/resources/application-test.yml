@@ -1,0 +1,64 @@
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            #            first:  #数据源1
+            #                url: jdbc:mysql://101.200.32.177:3306/destroyer_test?useUnicode=true&characterEncoding=utf8&useSSL=false
+            #                username: root
+            #                password: $Mex@2018#
+            #            second:  #数据源2
+            #                url: jdbc:mysql://101.200.32.177:3306/destroyer_test?useUnicode=true&characterEncoding=utf8&useSSL=false
+            #                username: root
+            #                password: $Mex@2018#
+            first:  #数据源1
+                url: jdbc:mysql://101.200.32.177:3306/pdd?useUnicode=true&characterEncoding=utf8&useSSL=false
+                username: root
+                password: $Mex@2018#
+            second:  #数据源2
+                url: jdbc:mysql://101.200.32.177:3306/pdd?useUnicode=true&characterEncoding=utf8&useSSL=false
+                username: root
+                password: $Mex@2018#
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+    mail:
+        host: smtp.exmail.qq.com
+        port: 465
+        username: crm-ad-mex@mobiexchanger.com
+        password: Mex123
+        default-encoding: utf-8
+        protocol: smtp
+        properties:
+            mail.smtp.auth: true
+            mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+            mail.smtp.socketFactory.fallback: false
+            mail.smtp.socketFactory.port: 465　
+logging:
+    path: log/
+application:
+    pdd:
+        client_id: be0356fc977b412cb9c75fd10c2d7e19
+        client_secret: 4da70d9f64731cde6c47058b3acab8243ccd5df9
